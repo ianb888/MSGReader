@@ -126,5 +126,18 @@ namespace MsgViewer.Properties {
                 this["Language"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(JNIsolutions.Tools.Settings.PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0, 0, 0")]
+        public global::System.Drawing.Rectangle WindowPosition {
+            get {
+                return ((global::System.Drawing.Rectangle)(this["WindowPosition"]));
+            }
+            set {
+                this["WindowPosition"] = value;
+            }
+        }
     }
 }

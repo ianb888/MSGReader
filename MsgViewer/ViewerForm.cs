@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -33,17 +34,70 @@ namespace MsgViewer
         /// Used to track all the created temporary folders
         /// </summary>
         readonly List<string> _tempFolders = new List<string>();
+        bool windowInitialized = false;
         #endregion
 
         #region Form events
         public ViewerForm()
         {
             InitializeComponent();
+
+            WindowState = FormWindowState.Normal;
+            StartPosition = FormStartPosition.CenterScreen;
+
+            if (Settings.Default.WindowPosition != Rectangle.Empty && IsVisibleOnAnyScreen(Settings.Default.WindowPosition))
+            {
+                // First set the bounds
+                StartPosition = FormStartPosition.Manual;
+                DesktopBounds = Settings.Default.WindowPosition;
+
+                // Next set the window state to the saved value (which could be Maximized)
+                WindowState = Settings.Default.WindowState;
+            }
+            else
+            {
+                // This resets the upper left corner of the window to windows standards
+                StartPosition = FormStartPosition.CenterScreen;
+
+                // We can still apply the saved size
+                if (Settings.Default.WindowPosition != Rectangle.Empty)
+                {
+                    Size = Settings.Default.WindowPosition.Size;
+                }
+            }
+            windowInitialized = true;
+        }
+
+        private bool IsVisibleOnAnyScreen(Rectangle rect)
+        {
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (screen.WorkingArea.IntersectsWith(rect))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // On a move or resize in Normal state, record the new values as they occur.
+        // This solves the problem of closing the app when minimized or maximized.
+        private void TrackWindowState()
+        {
+            // Don't record the window setup, otherwise we lose the persistent values!
+            if (!windowInitialized) { return; }
+
+            if (WindowState == FormWindowState.Normal)
+            {
+                Settings.Default.WindowPosition = DesktopBounds;
+                Settings.Default.Save();
+            }
         }
 
         private void ViewerForm_Load(object sender, EventArgs e)
         {
-            WindowPlacement.SetPlacement(Handle, Settings.Default.Placement);
+            //WindowPlacement.SetPlacement(Handle, Settings.Default.Placement);
+
             Closing += ViewerForm_Closing;
             genereateHyperlinksToolStripMenuItem.Checked = Settings.Default.GenereateHyperLinks;
             SetCulture(Settings.Default.Language);
@@ -58,8 +112,6 @@ namespace MsgViewer
 
         private void ViewerForm_Closing(object sender, EventArgs e)
         {
-            Settings.Default.Placement = WindowPlacement.GetPlacement(Handle);
-            Settings.Default.Save();
             foreach (var tempFolder in _tempFolders)
             {
                 if (Directory.Exists(tempFolder))
@@ -67,6 +119,34 @@ namespace MsgViewer
                     Directory.Delete(tempFolder, true);
                 }
             }
+        }
+
+        private void ViewerForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Settings.Default.Placement = WindowPlacement.GetPlacement(Handle);
+
+            // Only save the WindowState if Normal or Maximized
+            switch (WindowState)
+            {
+                case FormWindowState.Normal:
+                case FormWindowState.Maximized:
+                    Settings.Default.WindowState = WindowState;
+                    break;
+                default:
+                    Settings.Default.WindowState = FormWindowState.Normal;
+                    break;
+            }
+            Settings.Default.Save();
+        }
+
+        private void ViewerForm_Move(object sender, EventArgs e)
+        {
+            TrackWindowState();
+        }
+
+        private void ViewerForm_Resize(object sender, EventArgs e)
+        {
+            TrackWindowState();
         }
         #endregion
 
