@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,12 @@ namespace RegisterMSG
 
             if (args.Length > 0)
             {
+                if (args[0] == "NSIS")
+                {
+                    Console.WriteLine("!define PRODUCT_VERSION \"{0}\"", AssemblyVersion);
+                    Environment.Exit(0);
+                }
+
                 progPath = args[0];
 
                 if (args.Length > 1)
@@ -71,6 +78,17 @@ namespace RegisterMSG
             Console.WriteLine("Completed: {0} is installed as the default handler for {1} files.", progPath, ext);
             Console.ReadLine();
 #endif
+        }
+
+        /// <summary>
+        /// Returns the current AssemblyVersion
+        /// </summary>
+        public static string AssemblyVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
         }
     }
 }

@@ -40,7 +40,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Wwalczyszyn-Android-Style-Mail.ico</ApplicationIcon>
+    <ApplicationIcon>Android-Style-Mail.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -120,7 +120,9 @@
     <None Include="Resources\forward-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Wwalczyszyn-Android-Style-Mail.ico" />
+    <Content Include="Android-Style-Mail.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
