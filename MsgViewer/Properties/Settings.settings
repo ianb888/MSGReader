@@ -2,28 +2,28 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MsgViewer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Location" Type="System.Drawing.Point" Scope="User">
+    <Setting Name="Location" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
-    <Setting Name="Placement" Type="System.String" Scope="User">
+    <Setting Name="Placement" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="GenereateHyperLinks" Type="System.Boolean" Scope="User">
+    <Setting Name="GenereateHyperLinks" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="InitialDirectory" Type="System.String" Scope="User">
+    <Setting Name="InitialDirectory" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="WindowState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+    <Setting Name="WindowState" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.Windows.Forms.FormWindowState" Scope="User">
       <Value Profile="(Default)">Normal</Value>
     </Setting>
-    <Setting Name="ClientSize" Type="System.Drawing.Size" Scope="User">
+    <Setting Name="ClientSize" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">1062, 903</Value>
     </Setting>
-    <Setting Name="SaveDirectory" Type="System.String" Scope="User">
+    <Setting Name="SaveDirectory" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Language" Type="System.Int32" Scope="User">
+    <Setting Name="Language" Provider="JNIsolutions.Tools.Settings.PortableSettingsProvider" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>

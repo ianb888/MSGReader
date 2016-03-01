@@ -51,7 +51,9 @@ namespace MsgViewer
             var args = Environment.GetCommandLineArgs();
 
             if (args.Length > 1 && File.Exists(args[1]))
+            {
                 OpenFile(args[1]);
+            }
         }
 
         private void ViewerForm_Closing(object sender, EventArgs e)
@@ -61,7 +63,9 @@ namespace MsgViewer
             foreach (var tempFolder in _tempFolders)
             {
                 if (Directory.Exists(tempFolder))
+                {
                     Directory.Delete(tempFolder, true);
+                }
             }
         }
         #endregion
@@ -115,7 +119,9 @@ namespace MsgViewer
             };
 
             if (Directory.Exists(Settings.Default.SaveDirectory))
+            {
                 saveFileDialog1.InitialDirectory = Settings.Default.SaveDirectory;
+            }
 
             // Process input if the user clicked OK.
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -141,7 +147,9 @@ namespace MsgViewer
             };
 
             if (Directory.Exists(Settings.Default.InitialDirectory))
+            {
                 openFileDialog1.InitialDirectory = Settings.Default.InitialDirectory;
+            }
 
             // Process input if the user clicked OK.
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -199,9 +207,11 @@ namespace MsgViewer
             catch (Exception ex)
             {
                 if (tempFolder != null && Directory.Exists(tempFolder))
+                {
                     Directory.Delete(tempFolder, true);
+                }
 
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -227,13 +237,30 @@ namespace MsgViewer
         private void LanguageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (sender == LanguageEnglishMenuItem)
+            {
                 Settings.Default.Language = 1;
-            else if (sender == LanguageFrenchMenuItem)
-                Settings.Default.Language = 2;
-            else if (sender == LanguageGermanMenuItem)
-                Settings.Default.Language = 3;
-            else if (sender == LanguageDutchMenuItem)
-                Settings.Default.Language = 4;
+            }
+            else
+            {
+                if (sender == LanguageFrenchMenuItem)
+                {
+                    Settings.Default.Language = 2;
+                }
+                else
+                {
+                    if (sender == LanguageGermanMenuItem)
+                    {
+                        Settings.Default.Language = 3;
+                    }
+                    else
+                    {
+                        if (sender == LanguageDutchMenuItem)
+                        {
+                            Settings.Default.Language = 4;
+                        }
+                    }
+                }
+            }
 
             SetCulture(Settings.Default.Language);
             Settings.Default.Save();
@@ -277,5 +304,11 @@ namespace MsgViewer
             }
         }
         #endregion
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox about = new AboutBox();
+            about.Show();
+        }
     }
 }
