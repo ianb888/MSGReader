@@ -148,14 +148,14 @@
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -164,19 +164,19 @@
             this.printToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
             this.printToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.printToolStripMenuItem.Text = "&Print";
             this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -198,7 +198,7 @@
             this.LanguageDutchMenuItem});
             this.languageToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-            this.languageToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.languageToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.languageToolStripMenuItem.Text = "&Language";
             // 
             // LanguageEnglishMenuItem
@@ -243,8 +243,8 @@
             this.genereateHyperlinksToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.genereateHyperlinksToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.genereateHyperlinksToolStripMenuItem.Name = "genereateHyperlinksToolStripMenuItem";
-            this.genereateHyperlinksToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.genereateHyperlinksToolStripMenuItem.Text = "&Genereate hyperlinks";
+            this.genereateHyperlinksToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.genereateHyperlinksToolStripMenuItem.Text = "&Genereate Hyperlinks";
             this.genereateHyperlinksToolStripMenuItem.Click += new System.EventHandler(this.GenereateHyperlinksToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
@@ -258,7 +258,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -309,7 +309,7 @@
             this.PrintButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.PrintButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.PrintButton.Name = "PrintButton";
-            this.PrintButton.Size = new System.Drawing.Size(23, 36);
+            this.PrintButton.Size = new System.Drawing.Size(36, 36);
             this.PrintButton.Text = "&Print";
             this.PrintButton.Click += new System.EventHandler(this.PrintButton_Click);
             // 
@@ -318,7 +318,7 @@
             this.ForwardButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.ForwardButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ForwardButton.Enabled = false;
-            this.ForwardButton.Image = global::MsgViewer.Properties.Resources.forward_icon;
+            this.ForwardButton.Image = global::MsgViewer.Properties.Resources.ForwardIcon;
             this.ForwardButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ForwardButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ForwardButton.Name = "ForwardButton";
@@ -331,7 +331,7 @@
             this.BackButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.BackButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.BackButton.Enabled = false;
-            this.BackButton.Image = global::MsgViewer.Properties.Resources.back_icon;
+            this.BackButton.Image = global::MsgViewer.Properties.Resources.BackIcon;
             this.BackButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.BackButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.BackButton.Name = "BackButton";
