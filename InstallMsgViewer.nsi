@@ -1,5 +1,5 @@
 ; To use this file as a template, the following items need to be changed...
-!define PROJECT_HOME "C:\Users\ianb888\Source\Repos"
+!define PROJECT_HOME "C:\Users\ibedson\Source\Repos"
 !define APPNAME "MsgViewer"
 !define PRODUCT_NAME "Email Viewer"
 !define REGUNINSTKEY "{48a504c7-85f0-454d-a520-a6ea50c920bd}"

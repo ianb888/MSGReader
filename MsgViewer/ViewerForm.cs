@@ -75,8 +75,9 @@ namespace MsgViewer
 
                 if (!string.IsNullOrEmpty(fileNamePath))
                 {
+#if DEBUG
                     MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+#endif
                     FileInfo file = new FileInfo(fileNamePath);
                     if (file.Exists)
                     {
@@ -166,9 +167,9 @@ namespace MsgViewer
         {
             TrackWindowState();
         }
-        #endregion
+#endregion
 
-        #region GetTemporaryFolder
+#region GetTemporaryFolder
         /// <summary>
         /// Returns a temporary folder
         /// </summary>
@@ -179,9 +180,9 @@ namespace MsgViewer
             Directory.CreateDirectory(tempDirectory);
             return tempDirectory;
         }
-        #endregion
+#endregion
 
-        #region WebBrowser events
+#region WebBrowser events
         private void BackButton_Click_1(object sender, EventArgs e)
         {
             webBrowser1.GoBack();
@@ -203,9 +204,9 @@ namespace MsgViewer
             BackButton.Enabled = webBrowser1.CanGoBack;
             ForwardButton.Enabled = webBrowser1.CanGoForward;
         }
-        #endregion
+#endregion
 
-        #region SaveAsTextButton_Click
+#region SaveAsTextButton_Click
         private void SaveAsTextButton_Click(object sender, EventArgs e)
         {
             // Create an instance of the save file dialog box.
@@ -230,9 +231,9 @@ namespace MsgViewer
                 File.WriteAllText(saveFileDialog1.FileName, text);
             }
         }
-        #endregion
+#endregion
 
-        #region openToolStripMenuItem_Click
+#region openToolStripMenuItem_Click
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Create an instance of the open file dialog box.
@@ -256,23 +257,23 @@ namespace MsgViewer
                 OpenFile(openFileDialog1.FileName);
             }
         }
-        #endregion
+#endregion
 
-        #region printToolStripMenuItem_Click
+#region printToolStripMenuItem_Click
         private void printToolStripMenuItem_Click(object sender, EventArgs e)
         {
             webBrowser1.ShowPrintDialog();
         }
-        #endregion
+#endregion
 
-        #region exitToolStripMenuItem_Click
+#region exitToolStripMenuItem_Click
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
         }
-        #endregion
+#endregion
 
-        #region OpenFile
+#region OpenFile
         /// <summary>
         /// Opens the selected MSG of EML file
         /// </summary>
@@ -312,9 +313,9 @@ namespace MsgViewer
                 MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        #endregion
+#endregion
 
-        #region GenereateHyperlinksToolStripMenuItem_Click
+#region GenereateHyperlinksToolStripMenuItem_Click
         private void GenereateHyperlinksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (genereateHyperlinksToolStripMenuItem.Checked)
@@ -329,9 +330,9 @@ namespace MsgViewer
             }
             Settings.Default.Save();
         }
-        #endregion
+#endregion
 
-        #region LanguageToolStripMenuItem_Click
+#region LanguageToolStripMenuItem_Click
         private void LanguageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (sender == LanguageEnglishMenuItem)
@@ -363,9 +364,9 @@ namespace MsgViewer
             SetCulture(Settings.Default.Language);
             Settings.Default.Save();
         }
-        #endregion
+#endregion
 
-        #region SetCulture
+#region SetCulture
         /// <summary>
         /// Sets the culture
         /// </summary>
@@ -401,7 +402,7 @@ namespace MsgViewer
                     break;
             }
         }
-        #endregion
+#endregion
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
