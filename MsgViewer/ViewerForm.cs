@@ -66,6 +66,24 @@ namespace MsgViewer
                 }
             }
             windowInitialized = true;
+
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                string fileNamePath = args[1];
+                fileNamePath.Trim();
+
+                if (!string.IsNullOrEmpty(fileNamePath))
+                {
+                    MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    FileInfo file = new FileInfo(fileNamePath);
+                    if (file.Exists)
+                    {
+                        OpenFile(fileNamePath);
+                    }
+                }
+            }            
         }
 
         private bool IsVisibleOnAnyScreen(Rectangle rect)

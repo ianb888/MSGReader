@@ -61,7 +61,7 @@ namespace RegisterMSG
                 pai.Create
                 (
                     "Email Message",
-                    new ProgramVerb("Open", progPath + " %1")
+                    new ProgramVerb("Open", progPath + " \"%1\"")
                 );
 
                 // Optional
