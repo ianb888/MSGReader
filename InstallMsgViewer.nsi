@@ -105,6 +105,18 @@ Section "MainSection" SEC01
   install:
   Push "$INSTDIR\MsgReader.dll"
   Call AddSharedDLL
+  Push "$INSTDIR\de\MsgReader.resources.dll"
+  Call AddSharedDLL
+  Push "$INSTDIR\de\MsgViewer.resources.dll"
+  Call AddSharedDLL
+  Push "$INSTDIR\fr\MsgReader.resources.dll"
+  Call AddSharedDLL
+  Push "$INSTDIR\fr\MsgViewer.resources.dll"
+  Call AddSharedDLL
+  Push "$INSTDIR\nl\MsgReader.resources.dll"
+  Call AddSharedDLL
+  Push "$INSTDIR\nl\MsgViewer.resources.dll"
+  Call AddSharedDLL
   GoTo continue
 
   continue:
@@ -126,9 +138,9 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER_FULL}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoModify" "1"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoRepair" "1"
-  ; Create an Uninstall icon on the Start Menu
   CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}.lnk" "$INSTDIR\${APPNAME}.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\Uninst${APPNAME}.exe"
+  ; Create an Uninstall icon on the Start Menu
+;  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\Uninst${APPNAME}.exe"
 SectionEnd
 
 Function .onInit
@@ -234,6 +246,18 @@ Section Uninstall
   ; a shared DLL. If this is the last application that uses the DLL, then we can
   ; also remove it as well.
   Push "$INSTDIR\MsgReader.dll"
+  Call un.RemoveSharedDLL
+  Push "$INSTDIR\de\MsgReader.resources.dll"
+  Call un.RemoveSharedDLL
+  Push "$INSTDIR\de\MsgViewer.resources.dll"
+  Call un.RemoveSharedDLL
+  Push "$INSTDIR\fr\MsgReader.resources.dll"
+  Call un.RemoveSharedDLL
+  Push "$INSTDIR\fr\MsgViewer.resources.dll"
+  Call un.RemoveSharedDLL
+  Push "$INSTDIR\nl\MsgReader.resources.dll"
+  Call un.RemoveSharedDLL
+  Push "$INSTDIR\nl\MsgViewer.resources.dll"
   Call un.RemoveSharedDLL
 
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}.lnk"

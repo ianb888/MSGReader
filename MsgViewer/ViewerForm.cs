@@ -293,15 +293,21 @@ namespace MsgViewer
                 var error = msgReader.GetErrorMessage();
 
                 if (!string.IsNullOrEmpty(error))
+                {
                     throw new Exception(error);
+                }
 
                 if (!string.IsNullOrEmpty(files[0]))
+                {
                     webBrowser1.Navigate(files[0]);
+                }
 
                 FilesListBox.Items.Clear();
 
                 foreach (var file in files)
+                {
                     FilesListBox.Items.Add(file);
+                }
             }
             catch (Exception ex)
             {
@@ -309,7 +315,6 @@ namespace MsgViewer
                 {
                     Directory.Delete(tempFolder, true);
                 }
-
                 MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -360,7 +365,6 @@ namespace MsgViewer
                     }
                 }
             }
-
             SetCulture(Settings.Default.Language);
             Settings.Default.Save();
         }

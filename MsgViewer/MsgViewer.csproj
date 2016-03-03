@@ -93,6 +93,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ViewerForm.de.resx">
+      <DependentUpon>ViewerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewerForm.fr.resx">
+      <DependentUpon>ViewerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewerForm.nl.resx">
+      <DependentUpon>ViewerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ViewerForm.resx">
       <DependentUpon>ViewerForm.cs</DependentUpon>
     </EmbeddedResource>
