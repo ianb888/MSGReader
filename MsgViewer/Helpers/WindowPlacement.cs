@@ -30,14 +30,18 @@ namespace MsgViewer.Helpers
         public static void SetPlacement(IntPtr windowHandle, string placementXml)
         {
             if (string.IsNullOrEmpty(placementXml))
+            {
                 return;
+            }
 
             try
             {
                 var xmlBytes = Encoding.GetBytes(placementXml); 
                 NativeMethods.WINDOWPLACEMENT placement;
                 using (var memoryStream = new MemoryStream(xmlBytes))
-                    placement = (NativeMethods.WINDOWPLACEMENT) Serializer.Deserialize(memoryStream);
+                {
+                    placement = (NativeMethods.WINDOWPLACEMENT)Serializer.Deserialize(memoryStream);
+                }
 
                 placement.length = Marshal.SizeOf(typeof (NativeMethods.WINDOWPLACEMENT));
                 placement.flags = 0;

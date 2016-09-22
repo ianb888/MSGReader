@@ -13,14 +13,7 @@ namespace MsgViewer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            try
-            {
-                Application.Run(new ViewerForm());
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message, "An exception occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            Application.Run(new ViewerForm());
         }
     }
 }

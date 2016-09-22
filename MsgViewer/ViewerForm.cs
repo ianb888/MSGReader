@@ -67,24 +67,27 @@ namespace MsgViewer
             }
             windowInitialized = true;
 
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length > 1)
-            {
-                string fileNamePath = args[1];
-                fileNamePath.Trim();
+//            // Check if there are any command line arguments, i.e. the user double-clicked on a .msg file.
+//            string[] args = Environment.GetCommandLineArgs();
+//            if (args.Length > 1)
+//            {
+//                string fileNamePath = args[1];
+//                fileNamePath.Trim();
 
-                if (!string.IsNullOrEmpty(fileNamePath))
-                {
-#if DEBUG
-                    MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#endif
-                    FileInfo file = new FileInfo(fileNamePath);
-                    if (file.Exists)
-                    {
-                        OpenFile(fileNamePath);
-                    }
-                }
-            }            
+//                // This is just a sanity check, but its always expected to be a valid filename and path.
+//                if (!string.IsNullOrEmpty(fileNamePath))
+//                {
+//#if DEBUG
+//                    MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
+//#endif
+//                    FileInfo file = new FileInfo(fileNamePath);
+//                    // More sanity checking, make sure the file really exists.
+//                    if (file.Exists)
+//                    {
+//                        OpenFile(fileNamePath);
+//                    }
+//                }
+//            }            
         }
 
         private bool IsVisibleOnAnyScreen(Rectangle rect)
@@ -121,11 +124,26 @@ namespace MsgViewer
             genereateHyperlinksToolStripMenuItem.Checked = Settings.Default.GenereateHyperLinks;
             SetCulture(Settings.Default.Language);
 
-            var args = Environment.GetCommandLineArgs();
-
-            if (args.Length > 1 && File.Exists(args[1]))
+            // Check if there are any command line arguments, i.e. the user double-clicked on a .msg file.
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
             {
-                OpenFile(args[1]);
+                string fileNamePath = args[1];
+                fileNamePath.Trim();
+
+                // This is just a sanity check, but its always expected to be a valid filename and path.
+                if (!string.IsNullOrEmpty(fileNamePath))
+                {
+#if DEBUG
+                    MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
+                    FileInfo file = new FileInfo(fileNamePath);
+                    // More sanity checking, make sure the file really exists.
+                    if (file.Exists)
+                    {
+                        OpenFile(fileNamePath);
+                    }
+                }
             }
         }
 
@@ -171,12 +189,12 @@ namespace MsgViewer
 
 #region GetTemporaryFolder
         /// <summary>
-        /// Returns a temporary folder
+        /// Creates a temporary folder name.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the full path of the newly created temporary directory.</returns>
         private static string GetTemporaryFolder()
         {
-            var tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempDirectory);
             return tempDirectory;
         }
@@ -210,7 +228,7 @@ namespace MsgViewer
         private void SaveAsTextButton_Click(object sender, EventArgs e)
         {
             // Create an instance of the save file dialog box.
-            var saveFileDialog1 = new SaveFileDialog
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
                 // ReSharper disable once LocalizableElement
                 Filter = "TXT Files (.txt)|*.txt",
@@ -226,8 +244,10 @@ namespace MsgViewer
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 Settings.Default.SaveDirectory = Path.GetDirectoryName(saveFileDialog1.FileName);
-                var htmlToText = new HtmlToText();
-                var text = htmlToText.Convert(webBrowser1.DocumentText);
+                Settings.Default.Save();
+
+                HtmlToText htmlToText = new HtmlToText();
+                string text = htmlToText.Convert(webBrowser1.DocumentText);
                 File.WriteAllText(saveFileDialog1.FileName, text);
             }
         }
@@ -240,7 +260,7 @@ namespace MsgViewer
             var openFileDialog1 = new OpenFileDialog
             {
                 // ReSharper disable once LocalizableElement
-                Filter = "E-mail|*.msg;*.eml",
+                Filter = "Email Message|*.msg;*.eml",
                 FilterIndex = 1,
                 Multiselect = false
             };
@@ -254,6 +274,7 @@ namespace MsgViewer
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 Settings.Default.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
+                Settings.Default.Save();
                 OpenFile(openFileDialog1.FileName);
             }
         }
@@ -277,7 +298,7 @@ namespace MsgViewer
         /// <summary>
         /// Opens the selected MSG of EML file
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="fileName">The path and name of the file to open.</param>
         private void OpenFile(string fileName)
         {
             // Open the selected file to read.
@@ -288,9 +309,9 @@ namespace MsgViewer
                 tempFolder = GetTemporaryFolder();
                 _tempFolders.Add(tempFolder);
 
-                var msgReader = new Reader();
-                var files = msgReader.ExtractToFolder(fileName, tempFolder, genereateHyperlinksToolStripMenuItem.Checked);
-                var error = msgReader.GetErrorMessage();
+                Reader msgReader = new Reader();
+                string[] files = msgReader.ExtractToFolder(fileName, tempFolder, genereateHyperlinksToolStripMenuItem.Checked);
+                string error = msgReader.GetErrorMessage();
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -304,14 +325,14 @@ namespace MsgViewer
 
                 FilesListBox.Items.Clear();
 
-                foreach (var file in files)
+                foreach (string file in files)
                 {
                     FilesListBox.Items.Add(file);
                 }
             }
             catch (Exception ex)
             {
-                if (tempFolder != null && Directory.Exists(tempFolder))
+                if (!string.IsNullOrWhiteSpace(tempFolder) && Directory.Exists(tempFolder))
                 {
                     Directory.Delete(tempFolder, true);
                 }
@@ -412,6 +433,12 @@ namespace MsgViewer
         {
             AboutBox about = new AboutBox();
             about.Show();
+        }
+
+        private void viewSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewSource viewSource = new ViewSource();
+            viewSource.Show();
         }
     }
 }

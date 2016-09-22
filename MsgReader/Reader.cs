@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using MsgReader.Exceptions;
@@ -98,6 +100,17 @@ namespace MsgReader
 
         #region CheckFileNameAndOutputFolder
         /// <summary>
+        /// Convenience method to test if the right exists within the given rights
+        /// </summary>
+        /// <param name="right"></param>
+        /// <param name="rule"></param>
+        /// <returns></returns>
+        private static bool contains(FileSystemRights right, FileSystemAccessRule rule)
+        {
+            return (((int)right & (int)rule.FileSystemRights) == (int)right);
+        }
+
+        /// <summary>
         /// Checks if the <paramref name="inputFile"/> and <paramref name="outputFolder"/> is valid
         /// </summary>
         /// <param name="inputFile"></param>
@@ -108,34 +121,79 @@ namespace MsgReader
         /// <exception cref="MRFileTypeNotSupported">Raised when the extension is not .msg or .eml</exception>
         private static string CheckFileNameAndOutputFolder(string inputFile, string outputFolder)
         {
-            if (string.IsNullOrEmpty(inputFile))
-            {
-                throw new ArgumentNullException(inputFile);
-            }
-
+            // Output folder checks
+            // 1. Have we been given an output folder to use?
             if (string.IsNullOrEmpty(outputFolder))
             {
                 throw new ArgumentNullException(outputFolder);
             }
-
-            if (!File.Exists(inputFile))
-            {
-                throw new FileNotFoundException(inputFile);
-            }
-
+            // 2. Does the output folder really exist?
             if (!Directory.Exists(outputFolder))
             {
                 throw new DirectoryNotFoundException(outputFolder);
             }
 
-            var extension = Path.GetExtension(inputFile);
-            if (string.IsNullOrEmpty(extension))
+            // Input file checks
+            string extension = string.Empty;
+            // 3. Have we been given a file to read?
+            if (string.IsNullOrEmpty(inputFile))
             {
-                throw new MRFileTypeNotSupported("Expected .msg or .eml extension on the inputfile");
+                throw new ArgumentNullException(inputFile);
+            }
+            else
+            {
+                // 4. Does the file really exist?
+                if (!File.Exists(inputFile))
+                {
+                    throw new FileNotFoundException(inputFile);
+                }
+                else
+                {
+                    // 5. Do we have permission to read the file?
+                    FileInfo fi = new FileInfo(inputFile);
+                    AuthorizationRuleCollection arc = fi.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier));
+                    WindowsIdentity principal = WindowsIdentity.GetCurrent();
+                    bool denyRead = false;
+                    bool allowRead = false;
+
+                    for (int i = 0; i < arc.Count; i++)
+                    {
+                        FileSystemAccessRule rule = (FileSystemAccessRule)arc[i];
+                        if (principal.User.Equals(rule.IdentityReference))
+                        {
+                            if (contains(FileSystemRights.Read, rule))
+                                denyRead = true;
+                        }
+                        else if (AccessControlType.Allow.Equals(rule.AccessControlType))
+                        {
+                            if (contains(FileSystemRights.Read, rule))
+                                allowRead = true;
+                        }
+                    }
+
+                    // ToDo : Check for Group permissions
+                    // http://www.codeproject.com/Articles/14402/Testing-File-Access-Rights-in-NET
+
+                    if (denyRead || !allowRead)
+                    {
+                        // ToDo : Figure out what exception to throw
+                    }
+
+                    // 6. Does the file have the expected extension type?
+                    extension = Path.GetExtension(inputFile);
+
+                    if (string.IsNullOrEmpty(extension))
+                    {
+                        throw new MRFileTypeNotSupported("Expected .msg or .eml extension on the input file");
+                    }
+                    else
+                    {
+                        extension = extension.ToUpperInvariant();
+                    }
+                }
             }
 
-            extension = extension.ToUpperInvariant();
-
+            // 7. Does the file contain valid data?
             using (var fileStream = File.OpenRead(inputFile))
             {
                 var header = new byte[2];
@@ -147,7 +205,7 @@ namespace MsgReader
                         // Sometimes the email contains an MSG extension and actualy it's an EML.
                         // Most of the times this happens when a user saves the email manually and types 
                         // the filename. To prevent these kind of errors we do a double check to make sure 
-                        // the file is realy an MSG file
+                        // the file is really an MSG file.
                         if (header[0] == 0xD0 && header[1] == 0xCF)
                         {
                             return ".MSG";
@@ -156,11 +214,9 @@ namespace MsgReader
                         {
                             return ".EML";
                         }
-
                     case ".EML":
-                        // We can't do an extra check overhere because an EML file is text based 
+                        // We can't do an extra check here because an EML file is text based 
                         return extension;
-
                     default:
                         throw new MRFileTypeNotSupported("Wrong file extension, expected .msg or .eml");
                 }
@@ -181,10 +237,7 @@ namespace MsgReader
         /// <param name="outputFolder">The folder where to save the extracted msg file</param>
         /// <param name="hyperlinks">When true hyperlinks are generated for the To, CC, BCC and attachments</param>
         /// <param name="culture"></param>
-        public string[] ExtractToFolderFromCom(string inputFile, 
-                                               string outputFolder, 
-                                               bool hyperlinks = false, 
-                                               string culture = "")
+        public string[] ExtractToFolderFromCom(string inputFile, string outputFolder, bool hyperlinks = false, string culture = "")
         {
             try
             {
@@ -204,42 +257,40 @@ namespace MsgReader
 
         /// <summary>
         /// This method reads the <paramref name="inputFile"/> and when the file is supported it will do the following: <br/>
-        /// - Extract the HTML, RTF (will be converted to html) or TEXT body (in these order) <br/>
+        /// - Extract the HTML, RTF (will be converted to HTML) or TEXT body (in these order) <br/>
         /// - Puts a header (with the sender, to, cc, etc... (depends on the message type) on top of the body so it looks 
         ///   like if the object is printed from Outlook <br/>
         /// - Reads all the attachents <br/>
         /// And in the end writes everything to the given <paramref name="outputFolder"/>
         /// </summary>
-        /// <param name="inputFile">The msg file</param>
-        /// <param name="outputFolder">The folder where to save the extracted msg file</param>
-        /// <param name="hyperlinks">When true hyperlinks are generated for the To, CC, BCC and attachments</param>
-        /// <returns>String array containing the full path to the message body and its attachments</returns>
-        /// <exception cref="MRFileTypeNotSupported">Raised when the Microsoft Outlook message type is not supported</exception>
-        /// <exception cref="MRInvalidSignedFile">Raised when the Microsoft Outlook signed message is invalid</exception>
-        /// <exception cref="ArgumentNullException">Raised when the <param ref="inputFile"/> or <param ref="outputFolder"/> is null or empty</exception>
-        /// <exception cref="FileNotFoundException">Raised when the <param ref="inputFile"/> does not exists</exception>
-        /// <exception cref="DirectoryNotFoundException">Raised when the <param ref="outputFolder"/> does not exists</exception>
+        /// <param name="inputFile">The .msg file.</param>
+        /// <param name="outputFolder">The folder where to save the extracted .msg file.</param>
+        /// <param name="hyperlinks">When true hyperlinks are generated for the To, CC, BCC and attachments.</param>
+        /// <returns>String array containing the full path to the message body and its attachments.</returns>
+        /// <exception cref="MRFileTypeNotSupported">Raised when the Microsoft Outlook message type is not supported.</exception>
+        /// <exception cref="MRInvalidSignedFile">Raised when the Microsoft Outlook signed message is invalid.</exception>
+        /// <exception cref="ArgumentNullException">Raised when the <param ref="inputFile"/> or <param ref="outputFolder"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Raised when the <param ref="inputFile"/> does not exists.</exception>
+        /// <exception cref="DirectoryNotFoundException">Raised when the <param ref="outputFolder"/> does not exists.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string[] ExtractToFolder(string inputFile, string outputFolder, bool hyperlinks = false)
         {
             outputFolder = FileManager.CheckForBackSlash(outputFolder);
-            
             _errorMessage = string.Empty;
-
-            var extension = CheckFileNameAndOutputFolder(inputFile, outputFolder);
+            string extension = CheckFileNameAndOutputFolder(inputFile, outputFolder);
 
             switch (extension)
             {
                 case ".EML":
-                    using (var stream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (FileStream stream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        var message = Mime.Message.Load(stream);
+                        Mime.Message message = Mime.Message.Load(stream);
                         return WriteEmlEmail(message, outputFolder, hyperlinks).ToArray();
                     }
                 case ".MSG":
-                    using (var stream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (FileStream stream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        using (var message = new Storage.Message(stream))
+                        using (Storage.Message message = new Storage.Message(stream))
                         {
                             switch (message.Type)
                             {
@@ -261,7 +312,7 @@ namespace MsgReader
                                     return WriteMsgEmail(message, outputFolder, hyperlinks).ToArray();
 
                                 case Storage.Message.MessageType.EmailClearSigned:
-                                    throw new MRFileTypeNotSupported("A clear signed message is not supported");
+                                    throw new MRFileTypeNotSupported("A clear signed message is not supported.");
 
                                 case Storage.Message.MessageType.Appointment:
                                 case Storage.Message.MessageType.AppointmentNotification:
@@ -290,7 +341,7 @@ namespace MsgReader
                                     return WriteMsgStickyNote(message, outputFolder).ToArray();
 
                                 case Storage.Message.MessageType.Unknown:
-                                    throw new MRFileTypeNotSupported("Unsupported message type");
+                                    throw new MRFileTypeNotSupported("Unsupported message type.");
                             }
                         }
                     }
@@ -636,19 +687,14 @@ namespace MsgReader
             List<string> attachmentList;
             List<string> files;
 
-            PreProcessEmlFile(message,
-                hyperlinks,
-                outputFolder,
-                ref fileName,
-                out htmlBody,
-                out body,
-                out attachmentList,
-                out files);
+            PreProcessEmlFile(message, hyperlinks, outputFolder, ref fileName, out htmlBody, out body, out attachmentList, out files);
 
             if (!htmlBody)
+            {
                 hyperlinks = false;
+            }
 
-            var maxLength = 0;
+            int maxLength = 0;
 
             // Calculate padding width when we are going to write a text file
             if (!htmlBody)
@@ -670,15 +716,16 @@ namespace MsgReader
                 maxLength = languageConsts.Select(languageConst => languageConst.Length).Concat(new[] { 0 }).Max() + 2;
             }
 
-            var emailHeader = new StringBuilder();
+            StringBuilder emailHeader = new StringBuilder();
 
-            var headers = message.Headers;
+            MessageHeader headers = message.Headers;
 
             // Start of table
             WriteHeaderStart(emailHeader, htmlBody);
 
             // From
-            var from = string.Empty;
+            string from = string.Empty;
+
             if (headers.From != null)
             {
                 from = message.GetEmailAddresses(new List<RfcMailAddress> { headers.From }, hyperlinks, htmlBody);
@@ -693,25 +740,25 @@ namespace MsgReader
             WriteHeaderLineNoEncoding(emailHeader, htmlBody, maxLength, LanguageConsts.EmailToLabel, message.GetEmailAddresses(headers.To, hyperlinks, htmlBody));
 
             // CC
-            var cc = message.GetEmailAddresses(headers.Cc, hyperlinks, htmlBody);
+            string cc = message.GetEmailAddresses(headers.Cc, hyperlinks, htmlBody);
             if (!string.IsNullOrEmpty(cc))
             {
                 WriteHeaderLineNoEncoding(emailHeader, htmlBody, maxLength, LanguageConsts.EmailCcLabel, cc);
             }
 
             // BCC
-            var bcc = message.GetEmailAddresses(headers.Bcc, hyperlinks, htmlBody);
+            string bcc = message.GetEmailAddresses(headers.Bcc, hyperlinks, htmlBody);
             if (!string.IsNullOrEmpty(bcc))
             {
                 WriteHeaderLineNoEncoding(emailHeader, htmlBody, maxLength, LanguageConsts.EmailBccLabel, bcc);
             }
 
             // Subject
-            var subject = message.Headers.Subject ?? string.Empty;
+            string subject = message.Headers.Subject ?? string.Empty;
             WriteHeaderLine(emailHeader, htmlBody, maxLength, LanguageConsts.EmailSubjectLabel, subject);
 
             // Urgent
-            var importanceText = string.Empty;
+            string importanceText = string.Empty;
             switch (message.Headers.Importance)
             {
                 case MailPriority.Low:
@@ -738,8 +785,7 @@ namespace MsgReader
             // Attachments
             if (attachmentList.Count != 0)
             {
-                WriteHeaderLineNoEncoding(emailHeader, htmlBody, maxLength, LanguageConsts.EmailAttachmentsLabel,
-                    string.Join(", ", attachmentList));
+                WriteHeaderLineNoEncoding(emailHeader, htmlBody, maxLength, LanguageConsts.EmailAttachmentsLabel, string.Join(", ", attachmentList));
             }
 
             // Empty line

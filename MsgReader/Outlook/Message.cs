@@ -10,7 +10,6 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Web;
 using MsgReader.Exceptions;
 using MsgReader.Helpers;
 using MsgReader.Localization;

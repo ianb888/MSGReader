@@ -1,5 +1,5 @@
 ; To use this file as a template, the following items need to be changed...
-!define PROJECT_HOME "C:\Users\ibedson\Source\Repos"
+!define PROJECT_HOME "C:\Users\ibedson\Local Documents\Visual Studio 2015\Projects\MSGReader"
 !define APPNAME "MsgViewer"
 !define PRODUCT_NAME "Email Viewer"
 !define REGUNINSTKEY "{48a504c7-85f0-454d-a520-a6ea50c920bd}"
@@ -40,7 +40,7 @@ SetCompressor lzma
 ;!system 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe /m /p:FrameworkPathOverride="C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /p:Configuration=Release;DeployOnBuild=True;PackageAsSingleFile=False "C:\Users\ibedson\Documents\Visual Studio 2015\Projects\${APPNAME}\${APPNAME}.sln"'
 
 ; This is probably the place where we need to insert the code to query the application version number
-!system '"${PROJECT_HOME}\MSGReader\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe" NSIS > "$%TEMP%\${APPNAME}Version.nsh"'
+!system '"${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe" NSIS > "$%TEMP%\${APPNAME}Version.nsh"'
 !include "$%TEMP%\${APPNAME}Version.nsh"
 
 VIProductVersion ${PRODUCT_VERSION}
@@ -49,8 +49,8 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${PRODUCT_VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "Viewer for MSG and EML format files."
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${PRODUCT_PUBLISHER_FULL}"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" "Test Application is a trademark of Fake company"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Â© 2016 ${PRODUCT_PUBLISHER_FULL}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Viewer for MSG and EML format files."
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2016 ${PRODUCT_PUBLISHER_FULL}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
 !define MUI_WELCOMEPAGE_TITLE "${PRODUCT_NAME}$\r$\nVersion ${PRODUCT_VERSION}"
@@ -72,7 +72,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 ; MUI end ------
 
 Name "${PRODUCT_NAME}"
-OutFile "${APPNAME}Setup.exe"
+OutFile "${APPNAME}-${PRODUCT_VERSION}-Setup.exe"
 InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}"
 ;InstallDir "$LOCALAPPDATA\${PRODUCT_PUBLISHER}\${APPNAME}"
 ;InstallDir "${USERPROFILE}\Applications"
@@ -86,17 +86,17 @@ RequestExecutionLevel admin
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\${APPNAME}.exe"
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\${APPNAME}.exe.config"
-  File "${PROJECT_HOME}\MSGReader\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe"
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\MsgReader.dll"
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\Android-Style-Mail.ico"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe.config"
+  File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\MsgReader.dll"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\Android-Style-Mail.ico"
   SetOutPath "$INSTDIR\de"
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\de\"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\de\"
   SetOutPath "$INSTDIR\fr"
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\fr\"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\fr\"
   SetOutPath "$INSTDIR\nl"
-  File "${PROJECT_HOME}\MSGReader\${APPNAME}\bin\release\nl\"
+  File "${PROJECT_HOME}\${APPNAME}\bin\release\nl\"
 
   ; Check if this is a new installation, or an upgrade
   ReadRegStr $R0 ${PRODUCT_INST_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" ""
