@@ -35,6 +35,7 @@ namespace MsgViewer
         /// </summary>
         readonly List<string> _tempFolders = new List<string>();
         bool windowInitialized = false;
+        string currentFileOpen = string.Empty;
         #endregion
 
         #region Form events
@@ -65,29 +66,8 @@ namespace MsgViewer
                     Size = Settings.Default.WindowPosition.Size;
                 }
             }
+
             windowInitialized = true;
-
-//            // Check if there are any command line arguments, i.e. the user double-clicked on a .msg file.
-//            string[] args = Environment.GetCommandLineArgs();
-//            if (args.Length > 1)
-//            {
-//                string fileNamePath = args[1];
-//                fileNamePath.Trim();
-
-//                // This is just a sanity check, but its always expected to be a valid filename and path.
-//                if (!string.IsNullOrEmpty(fileNamePath))
-//                {
-//#if DEBUG
-//                    MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
-//#endif
-//                    FileInfo file = new FileInfo(fileNamePath);
-//                    // More sanity checking, make sure the file really exists.
-//                    if (file.Exists)
-//                    {
-//                        OpenFile(fileNamePath);
-//                    }
-//                }
-//            }            
         }
 
         private bool IsVisibleOnAnyScreen(Rectangle rect)
@@ -134,10 +114,8 @@ namespace MsgViewer
                 // This is just a sanity check, but its always expected to be a valid filename and path.
                 if (!string.IsNullOrEmpty(fileNamePath))
                 {
-#if DEBUG
-                    MessageBox.Show(fileNamePath, "Path to Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#endif
                     FileInfo file = new FileInfo(fileNamePath);
+
                     // More sanity checking, make sure the file really exists.
                     if (file.Exists)
                     {
@@ -329,13 +307,18 @@ namespace MsgViewer
                 {
                     FilesListBox.Items.Add(file);
                 }
+
+                currentFileOpen = fileName;
             }
             catch (Exception ex)
             {
+                currentFileOpen = string.Empty;
+
                 if (!string.IsNullOrWhiteSpace(tempFolder) && Directory.Exists(tempFolder))
                 {
                     Directory.Delete(tempFolder, true);
                 }
+
                 MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -438,6 +421,7 @@ namespace MsgViewer
         private void viewSourceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ViewSource viewSource = new ViewSource();
+            viewSource.pathToMessageSource = currentFileOpen;
             viewSource.Show();
         }
     }

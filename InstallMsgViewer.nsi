@@ -1,5 +1,5 @@
 ; To use this file as a template, the following items need to be changed...
-!define PROJECT_HOME "C:\Users\ibedson\Local Documents\Visual Studio 2015\Projects\MSGReader"
+!define PROJECT_HOME "."
 !define APPNAME "MsgViewer"
 !define PRODUCT_NAME "Email Viewer"
 !define REGUNINSTKEY "{48a504c7-85f0-454d-a520-a6ea50c920bd}"
@@ -30,7 +30,7 @@ SetCompressor lzma
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
-!define MUI_ICON "H:\Pictures\Icons\JNIsolutions.ico"
+!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\JNIsolutions.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall-colorful.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall.bmp"
@@ -73,11 +73,9 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
 Name "${PRODUCT_NAME}"
 OutFile "${APPNAME}-${PRODUCT_VERSION}-Setup.exe"
-InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}"
-;InstallDir "$LOCALAPPDATA\${PRODUCT_PUBLISHER}\${APPNAME}"
-;InstallDir "${USERPROFILE}\Applications"
+InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}\${APPNAME}"
 InstallDirRegKey ${PRODUCT_INST_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" ""
-ShowInstDetails hide
+ShowInstDetails show
 ShowUnInstDetails show
 BrandingText "${PRODUCT_PUBLISHER_FULL}"
 
