@@ -6,13 +6,13 @@
 !define PRODUCT_PUBLISHER "JNI Solutions"
 !define PRODUCT_PUBLISHER_FULL "JNI Solutions"
 !define PRODUCT_WEB_SITE "http://www.jnisolutions.com"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${APPNAME}"
-!define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${REGUNINSTKEY}"
 !define PRODUCT_INST_ROOT_KEY "HKLM"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${APPNAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
+!define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${REGUNINSTKEY}"
 !define FOLDERID_UserProgramFiles "{9fbd45c2-d5e5-4897-895e-3ec3f6d766bd}"
 !define KF_FLAG_CREATE 0x00008000
-!define LANG_ENGLISH "1033-English"
+!define LANG_ENGLISH "1033"
 !ifndef USERPROFILE
 !define USERPROFILE "$%USERPROFILE%"
 !endif
@@ -81,7 +81,10 @@ BrandingText "${PRODUCT_PUBLISHER_FULL}"
 
 RequestExecutionLevel admin
 
+!finalize '"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool" sign /v /sha1 1a1ea162f4a627d9aaa8b874477657f77558ddb1 /n "Veolia Environmental Services" /fd sha1 /tr http://timestamp.comodoca.com/rfc3161 /td sha256 "%1"'
+
 Section "MainSection" SEC01
+  SetShellVarContext all
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe"
@@ -123,22 +126,27 @@ Section "MainSection" SEC01
 SectionEnd
 
 Section -Post
+  SetShellVarContext all
+
   ExecWait '"$INSTDIR\RegisterMSG.exe" "$INSTDIR\MsgViewer.exe" "$INSTDIR\Android-Style-Mail.ico"'
+
   WriteUninstaller "$INSTDIR\Uninst${APPNAME}.exe"
+
   WriteRegStr ${PRODUCT_INST_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${APPNAME}.exe"
   ; Required Values
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\Uninst${APPNAME}.exe"
   ; Optional Values (May not work on older Windows versions)
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${APPNAME}.exe"
+  WriteRegExpandStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${APPNAME}.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER_FULL}"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoModify" "1"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoRepair" "1"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}.lnk" "$INSTDIR\${APPNAME}.exe"
+  WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoModify" "1"
+  WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoRepair" "1"
+  
+;  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}.lnk" "$INSTDIR\${APPNAME}.exe"
   ; Create an Uninstall icon on the Start Menu
-;  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\Uninst${APPNAME}.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\Uninst${APPNAME}.exe"
 SectionEnd
 
 Function .onInit
@@ -231,6 +239,7 @@ Function un.RemoveSharedDLL
 FunctionEnd
 
 Section Uninstall
+  SetShellVarContext all
   Delete "$INSTDIR\${APPNAME}.exe"
   Delete "$INSTDIR\${APPNAME}.exe.config"
   Delete "$INSTDIR\Android-Style-Mail.ico"
