@@ -73,7 +73,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
 Name "${PRODUCT_NAME}"
 OutFile "${APPNAME}-${PRODUCT_VERSION}-Setup.exe"
-InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}\${APPNAME}"
+InstallDir "$PROGRAMFILES64\${PRODUCT_PUBLISHER}\${APPNAME}"
 InstallDirRegKey ${PRODUCT_INST_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -81,7 +81,7 @@ BrandingText "${PRODUCT_PUBLISHER_FULL}"
 
 RequestExecutionLevel admin
 
-!finalize '"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool" sign /v /sha1 1a1ea162f4a627d9aaa8b874477657f77558ddb1 /n "Veolia Environmental Services" /fd sha1 /tr http://timestamp.comodoca.com/rfc3161 /td sha256 "%1"'
+!finalize '"C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool" sign /v /sha1 6171a510727f044a716473f3a3e0482a459cd8d3 /n "Veolia Environmental Services" /fd sha1 /tr http://timestamp.comodoca.com/rfc3161 /td sha256 "%1"'
 
 Section "MainSection" SEC01
   SetShellVarContext all
@@ -90,6 +90,7 @@ Section "MainSection" SEC01
   File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe.config"
   File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe"
+  File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe.config"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\MsgReader.dll"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\Android-Style-Mail.ico"
   SetOutPath "$INSTDIR\de"
@@ -244,6 +245,7 @@ Section Uninstall
   Delete "$INSTDIR\${APPNAME}.exe.config"
   Delete "$INSTDIR\Android-Style-Mail.ico"
   Delete "$INSTDIR\RegisterMSG.exe"
+  Delete "$INSTDIR\RegisterMSG.exe.config"
   RMDir /R "$INSTDIR\de"
   RMDir /R "$INSTDIR\fr"
   RMDir /R "$INSTDIR\nl"
