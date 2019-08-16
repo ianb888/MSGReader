@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsgReader", "MsgReader\MsgReader.csproj", "{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}"
 EndProject
@@ -74,6 +74,7 @@ Global
 		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release|Win32.ActiveCfg = Release|Any CPU
 		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release|x64.ActiveCfg = Release|Any CPU
+		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release|x64.Build.0 = Release|Any CPU
 		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release|x86.ActiveCfg = Release|Any CPU
 		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release-contrib|Any CPU.ActiveCfg = Release|Any CPU
 		{883D8C6E-2BEC-4C67-80B0-56E54A9FB214}.Release-contrib|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -99,6 +100,7 @@ Global
 		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release|Win32.ActiveCfg = Release|x86
 		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release|x64.Build.0 = Release|Any CPU
 		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release|x86.ActiveCfg = Release|x86
 		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release|x86.Build.0 = Release|x86
 		{0EAB7816-7958-41D7-8713-E410C5403A6C}.Release-contrib|Any CPU.ActiveCfg = Release|Any CPU
@@ -124,6 +126,7 @@ Global
 		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release|Win32.ActiveCfg = Release|Any CPU
 		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release|x64.Build.0 = Release|Any CPU
 		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release-contrib|Any CPU.ActiveCfg = Release|Any CPU
 		{EF251C67-3321-4B93-B9D8-1D14745F0F40}.Release-contrib|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -148,6 +151,7 @@ Global
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release|Win32.ActiveCfg = Release|Any CPU
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release|x64.ActiveCfg = Release|Any CPU
+		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release|x64.Build.0 = Release|Any CPU
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release|x86.ActiveCfg = Release|Any CPU
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release-contrib|Any CPU.ActiveCfg = Release|Any CPU
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1}.Release-contrib|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -201,5 +205,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0354B2B7-DC88-4FC8-9592-D527360B82C1} = {6E4369FD-73A1-4E35-AD6A-AFD8F043E887}
 		{1FB66498-B270-4A22-B209-060E9A527F27} = {6E4369FD-73A1-4E35-AD6A-AFD8F043E887}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90BCB72B-DE45-4482-ADED-513DECA50E77}
 	EndGlobalSection
 EndGlobal

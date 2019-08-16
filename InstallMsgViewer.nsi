@@ -30,7 +30,7 @@ SetCompressor lzma
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
-!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\JNIsolutions.ico"
+!define MUI_ICON "${PROJECT_HOME}\${APPNAME}\bin\release\Android-Style-Mail.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall-colorful.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall.bmp"
@@ -48,7 +48,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${PRODUCT_VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "Viewer for MSG and EML format files."
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${PRODUCT_PUBLISHER_FULL}"
-;VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" "Test Application is a trademark of Fake company"
+;VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" "Test Application is a trademark of JNI Solutions Pte Ltd"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© 2016 ${PRODUCT_PUBLISHER_FULL}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
@@ -89,10 +89,10 @@ Section "MainSection" SEC01
   SetOverwrite ifnewer
   File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\${APPNAME}.exe.config"
-  File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe"
-  File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe.config"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\MsgReader.dll"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\Android-Style-Mail.ico"
+  File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe"
+  File "${PROJECT_HOME}\Utilities\RegisterMSG\bin\Release\RegisterMSG.exe.config"
   SetOutPath "$INSTDIR\de"
   File "${PROJECT_HOME}\${APPNAME}\bin\release\de\"
   SetOutPath "$INSTDIR\fr"

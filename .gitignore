@@ -157,3 +157,4 @@ $RECYCLE.BIN/
 packages/Microsoft.WindowsAPICodePack-Core.1.1.0.0/Microsoft.WindowsAPICodePack-Core.1.1.0.0.nupkg
 *.exe
 /.vs/MsgReader/v16/Server/sqlite3
+/.vs/MsgReader/v15/Server/sqlite3
